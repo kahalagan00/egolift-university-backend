@@ -1,0 +1,82 @@
+appsettings.json
+
+# Build Folders
+bin/
+obj/
+
+# User-specific files
+*.dbmdl
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ASP.NET Scaffolding
+.scaffolding/
+
+# Visual Studio working files
+.vs/
+*.VC.db
+*.VC.opendb
+
+# Rider / JetBrains IDE files
+.idea/
+*.sln.iml
+
+# Logs
+*.log
+
+# NPM Packages
+node_modules/
+wwwroot/lib/
+
+# Publish output
+publish/
+out/
+
+# ASP.NET Core secrets
+secrets.json
+
+# Database files
+*.mdf
+*.ldf
+*.sqlite
+*.db
+
+# Entity Framework Migrations
+Migrations/
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
+
+# Environment Files
+.env
+.env.*
+
+# Resharper / Rider settings
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Visual Studio Code settings
+.vscode/
+*.code-workspace
+
+# Packages folder (if using legacy NuGet package restore)
+packages/
+
+# StyleCop
+StyleCopReport.xml
+
+# NuGet
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# By default, don't commit these unless they are important
+appsettings.Development.json
+appsettings.local.json
+
+# Crash dump files
+*.stackdump
