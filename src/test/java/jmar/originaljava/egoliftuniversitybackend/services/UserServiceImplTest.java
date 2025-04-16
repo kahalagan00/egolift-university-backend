@@ -1,6 +1,7 @@
 package jmar.originaljava.egoliftuniversitybackend.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import jmar.originaljava.egoliftuniversitybackend.controller.UserController;
 import jmar.originaljava.egoliftuniversitybackend.dto.UserDTO;
 import jmar.originaljava.egoliftuniversitybackend.mappers.UserMapper;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -47,8 +49,18 @@ class UserServiceImplTest {
     @Test
     void testListBeers() {
         List<UserDTO> dtos = userController.listUsers();
-        assertThat(dtos.size()).isEqualTo(50);
+        System.out.println(dtos.toString());
+        assertThat(dtos.size()).isEqualTo(3);
     }
 
+
+    @Rollback
+    @Transactional
+    @Test
+    void testEmptyList() {
+        userRepository.deleteAll();
+        List<UserDTO> dtos = userController.listUsers();
+        assertThat(dtos.size()).isEqualTo(0);
+    }
 
 }

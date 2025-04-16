@@ -20,6 +20,7 @@ import java.util.UUID;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "user_account")
 public class User {
 
     @Id
@@ -29,11 +30,11 @@ public class User {
     @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
 
-    @Column(length = 255, nullable = false)
+    @Column(length = 50, nullable = false)
     private String email;
 
     // Hash it later
-    @Column(length = 255, nullable = false)
+    @Column(length = 100, nullable = false)
     private String password;
 
     @Column(length = 50, nullable = false)
@@ -42,25 +43,25 @@ public class User {
     @Column(length = 50, nullable = false)
     private String lastName;
 
-    @Column(length = 15, nullable = true)
+    @Column(length = 15)
     private String phone;
 
-    @Column(length = 255)
+    @Column(length = 50)
     private String address;
 
-    @Column(length = 255)
+    @Column(length = 50)
     private String city;
 
-    @Column(length = 255)
+    @Column(length = 50)
     private String country;
 
-    @Column(length = 255)
+    @Column(length = 50)
     private LocalDate birthDate;
 
-    @Column(nullable = false)
+    @Column()
     private float height;
 
-    @Column(nullable = false)
+    @Column()
     private float weight;
 
     @ManyToOne

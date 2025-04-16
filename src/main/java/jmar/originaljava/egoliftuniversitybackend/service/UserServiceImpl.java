@@ -1,23 +1,31 @@
 package jmar.originaljava.egoliftuniversitybackend.service;
 
+import jmar.originaljava.egoliftuniversitybackend.dto.UserCreateDTO;
 import jmar.originaljava.egoliftuniversitybackend.dto.UserDTO;
+import jmar.originaljava.egoliftuniversitybackend.mappers.UserMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
-    private Map<UUID, UserDTO> userMap;
+    private final PasswordEncoder passwordEncoder;
+    private Map<UUID, UserCreateDTO> userMap;
+    private final UserMapper userMapper;
 
-    public UserServiceImpl() {
+    public UserServiceImpl(UserMapper userMapper, PasswordEncoder passwordEncoder) {
+        this.userMapper = userMapper;
         this.userMap = new HashMap<>();
 
-        UserDTO user1 = UserDTO.builder()
+        UserCreateDTO user1 = UserCreateDTO.builder()
                 .id(UUID.randomUUID())
+                .email("email@email.com")
+                .password(UUID.randomUUID().toString())
                 .firstName("Jmar")
                 .lastName("Fats")
                 .birthDate(LocalDate.parse("2000-11-08"))
@@ -25,8 +33,10 @@ public class UserServiceImpl implements UserService {
                 .height(1.75f)
                 .build();
 
-        UserDTO user2 = UserDTO.builder()
+        UserCreateDTO user2 = UserCreateDTO.builder()
                 .id(UUID.randomUUID())
+                .email("email@email.com")
+                .password(UUID.randomUUID().toString())
                 .firstName("Larry")
                 .lastName("Wheels")
                 .birthDate(LocalDate.parse("1994-12-03"))
@@ -34,8 +44,10 @@ public class UserServiceImpl implements UserService {
                 .height(1.854f)
                 .build();
 
-        UserDTO user3 = UserDTO.builder()
+        UserCreateDTO user3 = UserCreateDTO.builder()
                 .id(UUID.randomUUID())
+                .email("email@email.com")
+                .password(UUID.randomUUID().toString())
                 .firstName("Khamzat")
                 .lastName("Chimaev")
                 .birthDate(LocalDate.parse("1994-05-01"))
@@ -46,25 +58,41 @@ public class UserServiceImpl implements UserService {
         userMap.put(user1.getId(), user1);
         userMap.put(user2.getId(), user2);
         userMap.put(user3.getId(), user3);
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public List<UserDTO> listUsers() {
-        log.debug("Get Users in UserServiceImpl");
-        return new ArrayList<>(userMap.values());
+        System.out.println("Get Users -> in ServiceImpl was called!");
+
+//        return new ArrayList<>(userMap.values());
+
+        List<UserDTO> userDTOList = new ArrayList<>();
+        for (UserCreateDTO userCreateDTO : userMap.values()) {
+            userDTOList.add(userMapper.userCreateDTOToUserDTO(userCreateDTO));
+        }
+
+        return userDTOList;
     }
 
     @Override
     public Optional<UserDTO> getUserById(UUID userId) {
         log.debug("Get User by id: {} in UserServiceImpl", userId);
-        return Optional.of(this.userMap.get(userId));
+        UserCreateDTO userCreateDTO = userMap.get(userId);
+
+        if (userCreateDTO == null) return Optional.empty();
+
+        UserDTO userDTO = userMapper.userCreateDTOToUserDTO(userCreateDTO);
+        return Optional.of(userDTO);
     }
 
     @Override
-    public UserDTO saveNewUser(UserDTO user) {
+    public UserDTO saveNewUser(UserCreateDTO user) {
         log.debug("Save New User: {} in UserServiceImpl", user.toString());
-        UserDTO savedUser = UserDTO.builder()
+        UserCreateDTO savedUser = UserCreateDTO.builder()
                 .id(UUID.randomUUID())
+                .email(user.getEmail())
+                .password(user.getPassword())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .birthDate(user.getBirthDate())
@@ -72,22 +100,101 @@ public class UserServiceImpl implements UserService {
                 .weight(user.getWeight())
                 .build();
 
-        this.userMap.put(savedUser.getId(), savedUser);
-        return savedUser;
+        userMap.put(savedUser.getId(), savedUser);
+
+        return userMapper.userCreateDTOToUserDTO(savedUser);
     }
 
     @Override
-    public Optional<UserDTO> updateUserById(UUID userId, UserDTO user) {
-        return Optional.empty();
+    public Optional<UserDTO> updateUserById(UUID userId, UserCreateDTO user) {
+        UserCreateDTO existingUser = userMap.get(userId);
+
+        if (existingUser == null) return Optional.empty();
+
+        existingUser.setEmail(user.getEmail());
+        existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        existingUser.setFirstName(user.getFirstName());
+        existingUser.setLastName(user.getLastName());
+        existingUser.setBirthDate(user.getBirthDate());
+        existingUser.setPhone(user.getPhone());
+        existingUser.setAddress(user.getAddress());
+        existingUser.setCity(user.getCity());
+        existingUser.setCountry(user.getCountry());
+        existingUser.setHeight(user.getHeight());
+        existingUser.setWeight(user.getWeight());
+
+        return Optional.of(userMapper.userCreateDTOToUserDTO(existingUser));
     }
 
     @Override
     public Boolean deleteUserById(UUID userId) {
-        return null;
+        userMap.remove(userId);
+        return true;
     }
 
     @Override
-    public Optional<UserDTO> updateUserPatchById(UUID userId, UserDTO user) {
-        return Optional.empty();
+    public Optional<UserDTO> updateUserPatchById(UUID userId, UserCreateDTO user) {
+        UserCreateDTO existingUser = userMap.get(userId);
+
+        if (existingUser == null) return Optional.empty();
+
+
+        if (StringUtils.hasText(user.getEmail())) {
+            existingUser.setEmail(user.getEmail());
+        }
+
+        if (StringUtils.hasText(user.getPassword())) {
+            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+
+
+        if (StringUtils.hasText(user.getFirstName())) {
+
+            existingUser.setFirstName(user.getFirstName());
+        }
+
+        if (StringUtils.hasText(user.getLastName())) {
+
+            existingUser.setLastName(user.getLastName());
+        }
+
+        if (StringUtils.hasText(user.getBirthDate().toString())) {
+
+            existingUser.setBirthDate(user.getBirthDate());
+        }
+
+
+        if (StringUtils.hasText(user.getPhone())) {
+
+            existingUser.setPhone(user.getPhone());
+        }
+
+        if (StringUtils.hasText(user.getAddress())) {
+
+            existingUser.setAddress(user.getAddress());
+        }
+
+
+        if (StringUtils.hasText(user.getCity())) {
+
+            existingUser.setCity(user.getCity());
+        }
+
+        if (StringUtils.hasText(user.getCountry())) {
+
+            existingUser.setCountry(user.getCountry());
+        }
+
+        if (user.getHeight() != 0.0f) {
+
+            existingUser.setHeight(user.getHeight());
+        }
+
+        if (user.getWeight() != 0.0f) {
+
+            existingUser.setWeight(user.getWeight());
+        }
+
+        return Optional.of(userMapper.userCreateDTOToUserDTO(existingUser));
     }
 }
