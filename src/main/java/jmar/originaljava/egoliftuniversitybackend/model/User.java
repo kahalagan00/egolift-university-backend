@@ -8,6 +8,8 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -53,7 +55,7 @@ public class User {
     private String country;
 
     @Column(length = 255)
-    private String birthDate;
+    private LocalDate birthDate;
 
     @Column(nullable = false)
     private float height;
