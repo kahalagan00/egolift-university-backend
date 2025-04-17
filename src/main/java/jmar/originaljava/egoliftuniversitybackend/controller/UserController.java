@@ -22,18 +22,21 @@ public class UserController {
     public static final String USER_PATH_ID = USER_PATH + "/{userId}";
     private final UserService userService;
 
+    // Retrieves a list of all users in the system.
     @GetMapping(value = USER_PATH)
     public List<UserDTO> listUsers() {
         System.out.println("Get Users -> in Controller was called!");
         return userService.listUsers();
     }
 
+    // Retrieves a specific user by their unique identifier.
     @GetMapping(value = USER_PATH_ID)
     public UserDTO getUserById(@PathVariable("userId") UUID userId) {
         log.debug("Get User by Id -> in Controller was called!");
         return userService.getUserById(userId).orElseThrow(NotFoundException::new);
     }
 
+    // Creates a new user in the system.
     @PostMapping(USER_PATH)
     public ResponseEntity handlePost(@RequestBody UserCreateDTO userCreateDTO) {
         log.debug("Post Create User -> in Controller was called!");
@@ -44,6 +47,7 @@ public class UserController {
         return new ResponseEntity(headers, HttpStatus.CREATED);
     }
 
+    // Updates all fields of an existing user.
     @PutMapping(value = USER_PATH_ID)
     public ResponseEntity updateById(@PathVariable("userId") UUID userId,
                                      @RequestBody UserCreateDTO userCreateDTO) {
@@ -55,6 +59,7 @@ public class UserController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
+    // Partially updates an existing user with only the provided fields.
     @PatchMapping(value = USER_PATH_ID)
     public ResponseEntity updatePatchById(@PathVariable("userId") UUID userId,
                                      @RequestBody UserCreateDTO userCreateDTO) {
@@ -67,6 +72,7 @@ public class UserController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
+    // Removes a user from the system by their unique identifier.
     @DeleteMapping(USER_PATH_ID)
     public ResponseEntity deleteById(@PathVariable("userId") UUID userId) {
         log.debug("Delete User by Id -> in Controller was called!");

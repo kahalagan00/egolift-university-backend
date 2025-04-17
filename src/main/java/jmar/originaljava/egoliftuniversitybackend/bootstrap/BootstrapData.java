@@ -19,16 +19,15 @@ public class BootstrapData implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // Rollback everything just in case of errors
     @Transactional
     @Override
     public void run(String... args) throws Exception {
+        // Executes on application startup to initialize sample data
         loadUserData();
     }
 
     private void loadUserData() {
-
-        // Return if repository already contains something
+        // Creates and saves sample user data to the database if no users exist
         if (userRepository.count() > 0) {
             return;
         }

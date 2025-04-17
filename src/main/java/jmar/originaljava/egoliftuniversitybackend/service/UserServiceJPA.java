@@ -45,13 +45,13 @@ public class UserServiceJPA implements UserService {
     @Override
     public UserDTO saveNewUser(UserCreateDTO userCreateDTO) {
 
-        System.out.println(userCreateDTO.getFirstName());
-        System.out.println(userCreateDTO.getLastName());
-        System.out.println(userCreateDTO.getEmail());
-        System.out.println(userCreateDTO.getPhone());
-        System.out.println(userCreateDTO.getAddress());
-        System.out.println(userCreateDTO.getCity());
-        System.out.println(userCreateDTO.getCountry());
+//        System.out.println(userCreateDTO.getFirstName());
+//        System.out.println(userCreateDTO.getLastName());
+//        System.out.println(userCreateDTO.getEmail());
+//        System.out.println(userCreateDTO.getPhone());
+//        System.out.println(userCreateDTO.getAddress());
+//        System.out.println(userCreateDTO.getCity());
+//        System.out.println(userCreateDTO.getCountry());
 
         // Hash the password before saving to DB
         User rawUser = userMapper.userCreateDTOToUser(userCreateDTO);

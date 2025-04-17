@@ -20,7 +20,10 @@ public class UserServiceImpl implements UserService {
 
     public UserServiceImpl(UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
         this.userMap = new HashMap<>();
+
+        System.out.println("Initialized UserServiceImpl");
 
         UserCreateDTO user1 = UserCreateDTO.builder()
                 .id(UUID.randomUUID())
@@ -58,18 +61,16 @@ public class UserServiceImpl implements UserService {
         userMap.put(user1.getId(), user1);
         userMap.put(user2.getId(), user2);
         userMap.put(user3.getId(), user3);
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public List<UserDTO> listUsers() {
         System.out.println("Get Users -> in ServiceImpl was called!");
 
-//        return new ArrayList<>(userMap.values());
-
         List<UserDTO> userDTOList = new ArrayList<>();
-        for (UserCreateDTO userCreateDTO : userMap.values()) {
-            userDTOList.add(userMapper.userCreateDTOToUserDTO(userCreateDTO));
+        for (UserCreateDTO userCreateDTO : this.userMap.values()) {
+            UserDTO userDTO = this.userMapper.userCreateDTOToUserDTO(userCreateDTO);
+            userDTOList.add(userDTO);
         }
 
         return userDTOList;
