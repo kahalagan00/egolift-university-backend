@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> listUsers() {
-        System.out.println("Get Users -> in ServiceImpl was called!");
+        System.out.println("Get Users -> in UserServiceImpl was called!");
 
         List<UserDTO> userDTOList = new ArrayList<>();
         for (UserCreateDTO userCreateDTO : this.userMap.values()) {

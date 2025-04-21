@@ -62,7 +62,7 @@ public class UserController {
     // Partially updates an existing user with only the provided fields.
     @PatchMapping(value = USER_PATH_ID)
     public ResponseEntity updatePatchById(@PathVariable("userId") UUID userId,
-                                     @RequestBody UserCreateDTO userCreateDTO) {
+                                          @RequestBody UserCreateDTO userCreateDTO) {
         log.debug("Update Patch User by Id -> in Controller was called!");
 
         if (userService.updateUserPatchById(userId, userCreateDTO).isEmpty()) {

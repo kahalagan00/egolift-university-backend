@@ -1,6 +1,5 @@
 package jmar.originaljava.egoliftuniversitybackend.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import jmar.originaljava.egoliftuniversitybackend.controller.NotFoundException;
 import jmar.originaljava.egoliftuniversitybackend.controller.UserController;
@@ -25,7 +24,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @SpringBootTest
@@ -39,9 +38,6 @@ class UserControllerUnitTest {
 
     @Autowired
     UserMapper userMapper;
-
-    @Autowired
-    ObjectMapper objectMapper; // What is this for?
 
     @Autowired
     WebApplicationContext wac;
@@ -162,7 +158,6 @@ class UserControllerUnitTest {
     @Test
     void testListBeers() {
         List<UserDTO> dtos = userController.listUsers();
-        System.out.println(dtos.toString());
         assertThat(dtos.size()).isEqualTo(3);
     }
 
