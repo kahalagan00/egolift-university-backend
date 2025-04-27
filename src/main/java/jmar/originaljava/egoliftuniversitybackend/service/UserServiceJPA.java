@@ -3,7 +3,9 @@ package jmar.originaljava.egoliftuniversitybackend.service;
 import jmar.originaljava.egoliftuniversitybackend.dto.UserCreateDTO;
 import jmar.originaljava.egoliftuniversitybackend.dto.UserDTO;
 import jmar.originaljava.egoliftuniversitybackend.mappers.UserMapper;
+import jmar.originaljava.egoliftuniversitybackend.model.Exercise;
 import jmar.originaljava.egoliftuniversitybackend.model.User;
+import jmar.originaljava.egoliftuniversitybackend.repository.ExerciseRepository;
 import jmar.originaljava.egoliftuniversitybackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceJPA implements UserService {
     private final UserRepository userRepository;
+    private final ExerciseRepository exerciseRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
@@ -44,21 +47,17 @@ public class UserServiceJPA implements UserService {
 
     @Override
     public UserDTO saveNewUser(UserCreateDTO userCreateDTO) {
-
-//        System.out.println(userCreateDTO.getFirstName());
-//        System.out.println(userCreateDTO.getLastName());
-//        System.out.println(userCreateDTO.getEmail());
-//        System.out.println(userCreateDTO.getPhone());
-//        System.out.println(userCreateDTO.getAddress());
-//        System.out.println(userCreateDTO.getCity());
-//        System.out.println(userCreateDTO.getCountry());
-
         // Hash the password before saving to DB
         User rawUser = userMapper.userCreateDTOToUser(userCreateDTO);
 
+        if (userCreateDTO.getExerciseId() != null && !userCreateDTO.getExerciseId().isEmpty()) {
+            Exercise favoriteExercise = exerciseRepository.findById(UUID.fromString(userCreateDTO.getExerciseId()))
+                    .orElse(null);
+
+            rawUser.setFavoriteExercise(favoriteExercise);
+        }
 
         rawUser.setPassword(passwordEncoder.encode(rawUser.getPassword()));
-
         User savedUser = userRepository.save(rawUser);
         return userMapper.userToUserDTO(savedUser);
     }
@@ -79,6 +78,14 @@ public class UserServiceJPA implements UserService {
                     foundUser.setCountry(user.getCountry());
                     foundUser.setWeight(user.getWeight());
                     foundUser.setHeight(user.getHeight());
+
+                    if (user.getExerciseId() != null && !user.getExerciseId().isEmpty()) {
+                        Exercise favoriteExercise = exerciseRepository.findById(UUID.fromString(user.getExerciseId()))
+                                .orElse(null);
+
+                        foundUser.setFavoriteExercise(favoriteExercise);
+                    }
+
                     atomicReference.set(Optional.of(userMapper
                             .userToUserDTO(userRepository.save(foundUser))));
                 }, () -> atomicReference.set(Optional.empty()));
@@ -143,6 +150,13 @@ public class UserServiceJPA implements UserService {
 
                     if (user.getWeight() != 0.0f) {
                         foundUser.setWeight(user.getWeight());
+                    }
+
+                    if (user.getExerciseId() != null && !user.getExerciseId().isEmpty()) {
+                        Exercise favoriteExercise = exerciseRepository.findById(UUID.fromString(user.getExerciseId()))
+                                .orElse(null);
+
+                        foundUser.setFavoriteExercise(favoriteExercise);
                     }
 
                     atomicReference.set(Optional.of(userMapper

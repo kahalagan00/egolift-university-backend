@@ -17,6 +17,7 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(origins = "http://localhost:5173") // For development only
 public class UserController {
     public static final String USER_PATH = "/api/v1/user";
     public static final String USER_PATH_ID = USER_PATH + "/{userId}";

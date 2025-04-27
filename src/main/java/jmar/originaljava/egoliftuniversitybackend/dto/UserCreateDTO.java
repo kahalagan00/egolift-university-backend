@@ -21,6 +21,7 @@ public class UserCreateDTO {
     private String country;
     private float weight;
     private float height;
+    private String exerciseId;
 
     public UUID getId() {
         return id;
@@ -116,5 +117,13 @@ public class UserCreateDTO {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public String getExerciseId() {
+        return exerciseId;
+    }
+
+    public void setExerciseId(String exerciseId) {
+        this.exerciseId = exerciseId;
     }
 }
