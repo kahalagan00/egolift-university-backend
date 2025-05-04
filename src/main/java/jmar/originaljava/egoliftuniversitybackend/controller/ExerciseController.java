@@ -17,7 +17,7 @@ import java.util.UUID;
 @RestController
 @CrossOrigin(origins = "http://localhost:5173") // For development only
 public class ExerciseController {
-    public static final String EXERCISE_PATH = "/api/v1/exercise";
+    public static final String EXERCISE_PATH = "/api/v1/exercises";
     public static final String EXERCISE_PATH_ID = EXERCISE_PATH + "/{exerciseId}";
     private final ExerciseService exerciseService;
 
