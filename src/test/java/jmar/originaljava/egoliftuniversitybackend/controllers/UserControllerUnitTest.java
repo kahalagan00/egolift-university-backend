@@ -156,7 +156,7 @@ class UserControllerUnitTest {
     }
 
     @Test
-    void testListBeers() {
+    void testListUsers() {
         List<UserDTO> dtos = userController.listUsers();
         assertThat(dtos.size()).isEqualTo(3);
     }

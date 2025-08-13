@@ -49,6 +49,8 @@ public class Exercise {
     @Column(nullable = false)
     private int difficulty;
 
-//    @ManyToOne
-//    private Workout workout;
+    // Many exercises to one workout
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "workout_id")
+    private Workout workout;
 }
